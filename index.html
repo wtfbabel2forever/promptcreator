@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Prompt Creator Pro - Advanced Engine</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            color: white;
+            position: relative;
+            transition: background-image 1s ease-in-out;
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 15, 30, 0.85);
+            z-index: -1;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 2rem 0;
+        }
+        
+        .header-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #4cc9f0, #4361ee, #3a0ca3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .subtitle {
+            font-size: 1.125rem;
+            color: #e2e8f0;
+            max-width: 48rem;
+            margin: 0 auto 1rem;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .engine-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(67, 97, 238, 0.2);
+            border: 1px solid rgba(67, 97, 238, 0.4);
+            border-radius: 9999px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.875rem;
+            color: #4cc9f0;
+            margin-top: 1rem;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .main-content {
+            padding-bottom: 3rem;
+        }
+        
+        .input-section {
+            max-width: 28rem;
+            margin: 0 auto 3rem;
+        }
+        
+        .input-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .input-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #e2e8f0;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.2s;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: #4361ee;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.3);
+        }
+        
+        .input-field::placeholder {
+            color: #94a3b8;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .generate-btn {
+            flex: 1;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(to right, #4361ee, #3a0ca3);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .generate-btn:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 10px 15px -3px rgba(67, 97, 238, 0.4);
+        }
+        
+        .generate-btn:disabled {
+            background: linear-gradient(to right, #4b5563, #6b7280);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .reset-btn {
+            padding: 0.75rem;
+            background: rgba(75, 85, 99, 0.6);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .reset-btn:hover {
+            background: rgba(75, 85, 99, 0.8);
+        }
+        
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .title-divider {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, rgba(67, 97, 238, 0.4), transparent);
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .prompts-container {
+            max-width: 56rem;
+            margin: 0 auto;
+        }
+        
+        .prompt-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.2s;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+        
+        .prompt-card:hover {
+            border-color: rgba(67, 97, 238, 0.6);
+            transform: translateY(-2px);
+        }
+        
+        .prompt-content {
+            display: flex;
+            gap: 0.75rem;
+        }
+        
+        .prompt-icon {
+            flex-shrink: 0;
+            margin-top: 0.25rem;
+            color: #4cc9f0;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .prompt-text {
+            flex: 1;
+            color: #f1f5f9;
+            line-height: 1.6;
+            font-size: 0.95rem;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .copy-btn {
+            flex-shrink: 0;
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            border-radius: 0.5rem;
+            color: #94a3b8;
+            cursor: pointer;
+            transition: all 0.2s;
+            opacity: 0;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .prompt-card:hover .copy-btn {
+            opacity: 1;
+        }
+        
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            color: #4cc9f0;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .copied-notice {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.875rem;
+            color: #4cc9f0;
+            margin-top: 0.5rem;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            max-width: 64rem;
+            margin: 4rem auto 0;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.2s;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(67, 97, 238, 0.4);
+        }
+        
+        .feature-icon {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-icon-blue {
+            background: linear-gradient(to bottom right, #4361ee, #4cc9f0);
+        }
+        
+        .feature-icon-green {
+            background: linear-gradient(to bottom right, #4cc9f0, #3a0ca3);
+        }
+        
+        .feature-icon-purple {
+            background: linear-gradient(to bottom right, #7209b7, #4361ee);
+        }
+        
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .feature-desc {
+            color: #e2e8f0;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 2rem 0;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .footer-text {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: #94a3b8;
+            font-size: 0.875rem;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .spinner {
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 640px) {
+            .header-title {
+                font-size: 2rem;
+            }
+            
+            .input-section {
+                max-width: 100%;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .generate-btn {
+                width: 100%;
+            }
+        }
+        
+        /* Four elements display */
+        .elements-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .element-box {
+            background: rgba(67, 97, 238, 0.15);
+            border: 1px solid rgba(67, 97, 238, 0.3);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .element-title {
+            font-weight: 600;
+            color: #4cc9f0;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .element-content {
+            font-size: 0.85rem;
+            color: #e2e8f0;
+            line-height: 1.4;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .element-copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            padding: 0.25rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 0.25rem;
+            color: #94a3b8;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .element-copy-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #4cc9f0;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .element-copied {
+            color: #4cc9f0;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        @media (max-width: 768px) {
+            .elements-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Background change indicator */
+        .bg-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            z-index: 1000;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay"></div>
+    <div class="container">
+        <header class="header">
+            <div class="header-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4.5 4.5 0 1 0 12 18.5 4.5 4.5 0 1 0 19.968 12 4 4 0 0 0 20 10 4 4 0 0 0 12 5Z"/><path d="M12 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"/><path d="M10 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"/><path d="M14 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"/><path d="M16 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"/></svg>
+                <span>AI Prompt Creator Pro</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>
+            </div>
+            <p class="subtitle">
+                Advanced AI engine for contextual prompt generation with 4 distinct elements
+            </p>
+            <div class="engine-badge">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></svg>
+                <span>Advanced Contextual Engine - Keyword-based Precision Generation</span>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="input-section">
+                <div class="input-card">
+                    <div>
+                        <label for="inputWord" class="input-label">
+                            Enter Keywords (e.g., model swim pool)
+                        </label>
+                        <input type="text" id="inputWord" placeholder="Enter related keywords..." class="input-field">
+                    </div>
+                    <div class="button-group">
+                        <button class="generate-btn" id="generateBtn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                            <span>Generate Prompt</span>
+                        </button>
+                        <button class="reset-btn" id="resetBtn" title="Reset">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="prompts-container" id="promptsContainer"></div>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-text">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></svg>
+                <span>AI Prompt Creator Pro - Local Only, No Server Storage</span>
+            </div>
+        </footer>
+    </div>
+    
+    <div class="bg-indicator" id="bgIndicator">Background: logo1.png</div>
+
+    <script>
+        // State management
+        let inputWord = '';
+        let generatedPrompts = [];
+        let isGenerating = false;
+        let allScenarios = []; // Store all 16 scenarios (4 prompts x 4 scenarios each)
+
+        // Preload background images
+        function preloadBackgrounds() {
+            // Set initial background
+            changeBackground();
+            
+            // Change background every 10 seconds
+            setInterval(changeBackground, 10000);
+        }
+
+        // Change background to random image
+        function changeBackground() {
+            // Generate random number between 1 and 500
+            const randomNum = Math.floor(Math.random() * 500) + 1;
+            const randomImage = `logo/logo${randomNum}.png`;
+            
+            // Update background
+            document.body.style.backgroundImage = `url('${randomImage}')`;
+            
+            // Update indicator
+            document.getElementById('bgIndicator').textContent = `Background: logo${randomNum}.png`;
+        }
+
+        // Keyword-based database
+        const keywordDatabase = {
+            // model related
+            "model": {
+                characters: [
+                    "professional fashion model with perfect skin tone and refined bone structure",
+                    "athletic fitness model with muscular yet graceful physique",
+                    "commercial model with charismatic expression and natural charm",
+                    "artistic model with unique features and creative sensibility",
+                    "diverse model representing various ethnicities and body types"
+                ],
+                appearances: [
+                    "wearing high-end designer outfit with sophisticated styling",
+                    "dressed in chic black ensemble with minimalist aesthetic",
+                    "in luxurious jewelry accessories with elegant finishing",
+                    "wearing casual denim look with natural everyday style",
+                    "dressed in elegant dress with graceful and refined atmosphere"
+                ],
+                poses: [
+                    "natural pose facing camera with genuine smile and confidence",
+                    "dramatic angle fashion pose with artistic composition",
+                    "dynamic walking pose with natural movement and flow",
+                    "creative pose breaking symmetry with innovative approach",
+                    "natural interaction with product showing authentic engagement"
+                ],
+                scenarios: [
+                    "premium studio with professional lighting setup and equipment",
+                    "urban high-end brand store with modern interior design",
+                    "window setting with natural light creating soft illumination",
+                    "luxury hotel lobby with sophisticated ambient atmosphere",
+                    "outdoor fashion shoot with city skyline background"
+                ]
+            },
+            
+            // swim related
+            "swim": {
+                characters: [
+                    "professional swimmer with powerful muscles and athletic build",
+                    "recreational swimmer with healthy and energetic physique",
+                    "lifeguard with responsible and vigilant personality",
+                    "swimming student with passionate learning attitude",
+                    "beach lover with relaxed and free-spirited character"
+                ],
+                appearances: [
+                    "wearing high-performance competition swimsuit with compression",
+                    "dressed in stylish bikini with fashionable design elements",
+                    "in sporty rash guard with functional and trendy style",
+                    "wearing classic one-piece swimsuit with elegant simplicity",
+                    "dressed in trendy board shorts with casual beach vibe"
+                ],
+                poses: [
+                    "swimming butterfly stroke with elegant arm movements",
+                    "floating on back with peaceful and relaxed expression",
+                    "diving pose with perfect form and streamlined body",
+                    "resting at pool edge with legs naturally extended",
+                    "dynamic swimming scene with splashing water effects"
+                ],
+                scenarios: [
+                    "50m standard competition pool with clear lane markers",
+                    "resort infinity pool with tropical ocean view integration",
+                    "private villa pool with exclusive privacy setting",
+                    "beachfront pool with natural environment integration",
+                    "indoor heated pool with comfortable temperature control"
+                ]
+            },
+            
+            // pool related
+            "pool": {
+                characters: [
+                    "swimming enthusiast enjoying water recreation activities",
+                    "family member sharing warm emotional moments",
+                    "group of friends with vibrant and active energy",
+                    "personal trainer providing professional guidance",
+                    "person seeking relaxation and healing in water"
+                ],
+                appearances: [
+                    "wearing premium swimsuit with high-quality materials",
+                    "dressed in beachwear creating seaside atmosphere",
+                    "in swim casual transitioning to everyday clothing",
+                    "wearing swimming training wear with functional design",
+                    "dressed in luxury bikini with sophisticated style"
+                ],
+                poses: [
+                    "dynamic swimming pose with water splash effects",
+                    "relaxing float pose with peaceful facial expression",
+                    "poolside resting pose reading book or drinking beverage",
+                    "diving pose with perfect jumping form and shape",
+                    "relaxing on inflatable water lounge with happy expression"
+                ],
+                scenarios: [
+                    "luxury resort pool with tropical ambiance setting",
+                    "private home pool with exclusive privacy space",
+                    "hotel rooftop pool with city view panorama",
+                    "swimming lesson pool with professional training environment",
+                    "family pool with multi-generational gathering space"
+                ]
+            },
+            
+            // fashion related
+            "fashion": {
+                characters: [
+                    "fashion designer with creative artistic sensibility",
+                    "stylist with refined aesthetic combination skills",
+                    "fashion blogger leading trendsetting influence",
+                    "runway model with professional and elegant presence",
+                    "street fashionista with unique and original style"
+                ],
+                appearances: [
+                    "wearing high-end designer brand with premium materials",
+                    "dressed in street fashion with trendy and unique style",
+                    "in vintage look with classic yet distinctive aesthetic",
+                    "wearing minimalist style with simple but refined details",
+                    "dressed in ethnic mix and match with cultural fusion"
+                ],
+                poses: [
+                    "runway walk pose with professional and elegant movement",
+                    "street fashion photo pose with natural casual style",
+                    "lookbook shooting pose emphasizing outfit details",
+                    "editorial style pose with artistic and creative approach",
+                    "SNS verification shot with friendly natural expression"
+                ],
+                scenarios: [
+                    "fashion week runway with professional show stage",
+                    "Milan, Paris street fashion shooting locations",
+                    "high-end brand flagship store with luxury setting",
+                    "Seoul Garosugil trendy fashion district",
+                    "New York Times Square global fashion hub"
+                ]
+            }
+        };
+
+        // Detail description database
+        const detailDatabase = [
+            "sunlight sparkling on water droplets creating diamond-like reflections",
+            "swimsuit fabric texture and silhouette swaying with water ripples",
+            "geometric pool tile patterns magnified underwater creating visual effects",
+            "aura spreading in water with light refraction creating fantasy atmosphere",
+            "moisture glistening on skin creating natural watercolor-like effects",
+            "natural light enhancing skin radiance with soft illumination",
+            "background out-of-focus creating visual emphasis on subject",
+            "landscape and subject harmony with balanced framing composition"
+        ];
+
+        // Technical elements database
+        const technicalDatabase = [
+            "8K ultra-high resolution capturing finest details with perfection",
+            "cinematic lighting with movie-level illumination and color grading",
+            "professional studio shooting with expert image quality standards",
+            "high-end lens with perfect blur and focus control capabilities",
+            "photorealistic rendering indistinguishable from actual photographs",
+            "HDR technology with vivid contrast and dynamic range",
+            "color temperature adjustment with natural harmonious color palette",
+            "depth control with beautiful background blur focusing on subject"
+        ];
+
+        // Keyword analysis and contextual matching function
+        function analyzeKeywords(keywords) {
+            const keywordArray = keywords.toLowerCase().split(/\s+/);
+            const matchedDatabases = [];
+            
+            // Match databases by keywords
+            keywordArray.forEach(keyword => {
+                if (keywordDatabase[keyword]) {
+                    matchedDatabases.push(keywordDatabase[keyword]);
+                }
+            });
+            
+            // Use default database if no matches
+            if (matchedDatabases.length === 0) {
+                return keywordDatabase["model"]; // Default
+            }
+            
+            // Merge multiple matched databases
+            if (matchedDatabases.length > 1) {
+                const merged = {
+                    characters: [],
+                    appearances: [],
+                    poses: [],
+                    scenarios: []
+                };
+                
+                matchedDatabases.forEach(db => {
+                    merged.characters = [...merged.characters, ...db.characters];
+                    merged.appearances = [...merged.appearances, ...db.appearances];
+                    merged.poses = [...merged.poses, ...db.poses];
+                    merged.scenarios = [...merged.scenarios, ...db.scenarios];
+                });
+                
+                return merged;
+            }
+            
+            return matchedDatabases[0];
+        }
+
+        // Advanced AI algorithm for prompt generation - creates 4 different scenarios
+        function generateFourDifferentScenarios() {
+            const database = analyzeKeywords(inputWord);
+            const scenarios = [];
+            
+            // Generate 4 completely different scenarios
+            for (let i = 0; i < 4; i++) {
+                // Weighted random selection
+                function getWeightedRandom(array) {
+                    if (array.length === 0) return "";
+                    
+                    // Assign weights (random + keyword relevance)
+                    const weights = array.map((item, index) => {
+                        let weight = Math.random();
+                        
+                        // Boost weight for keyword-relevant items
+                        if (inputWord && item.includes(inputWord.toLowerCase())) {
+                            weight += 0.3; // Bonus for high relevance
+                        }
+                        
+                        return weight;
+                    });
+                    
+                    const maxWeightIndex = weights.indexOf(Math.max(...weights));
+                    return array[maxWeightIndex];
+                }
+                
+                const character = getWeightedRandom(database.characters);
+                const appearance = getWeightedRandom(database.appearances);
+                const pose = getWeightedRandom(database.poses);
+                const scenario = getWeightedRandom(database.scenarios);
+                const detail = getWeightedRandom(detailDatabase);
+                const technical = getWeightedRandom(technicalDatabase);
+                
+                scenarios.push({
+                    character: character,
+                    appearance: appearance,
+                    pose: pose,
+                    scenario: scenario,
+                    detail: detail,
+                    technical: technical
+                });
+            }
+            
+            return scenarios;
+        }
+
+        // Render 4 elements with individual copy buttons - each box has different content
+        function renderElements(promptIndex) {
+            if (allScenarios.length === 0 || !allScenarios[promptIndex]) return '';
+            
+            const scenarios = allScenarios[promptIndex];
+            const labels = ['A', 'B', 'C', 'D'];
+            
+            return `
+                <div class="elements-container">
+                    <div class="element-box">
+                        <div class="element-title">SCENARIO ${labels[0]}</div>
+                        <div class="element-content">${scenarios[0].character}, ${scenarios[0].appearance}, ${scenarios[0].pose}, ${scenarios[0].scenario}</div>
+                        <button class="element-copy-btn" data-prompt="${promptIndex}" data-scenario="0" title="Copy Scenario ${labels[0]}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                        </button>
+                        <div class="element-copied" id="prompt-${promptIndex}-scenario-0-copied" style="display: none;">Copied!</div>
+                    </div>
+                    <div class="element-box">
+                        <div class="element-title">SCENARIO ${labels[1]}</div>
+                        <div class="element-content">${scenarios[1].character}, ${scenarios[1].appearance}, ${scenarios[1].pose}, ${scenarios[1].scenario}</div>
+                        <button class="element-copy-btn" data-prompt="${promptIndex}" data-scenario="1" title="Copy Scenario ${labels[1]}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                        </button>
+                        <div class="element-copied" id="prompt-${promptIndex}-scenario-1-copied" style="display: none;">Copied!</div>
+                    </div>
+                    <div class="element-box">
+                        <div class="element-title">SCENARIO ${labels[2]}</div>
+                        <div class="element-content">${scenarios[2].character}, ${scenarios[2].appearance}, ${scenarios[2].pose}, ${scenarios[2].scenario}</div>
+                        <button class="element-copy-btn" data-prompt="${promptIndex}" data-scenario="2" title="Copy Scenario ${labels[2]}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                        </button>
+                        <div class="element-copied" id="prompt-${promptIndex}-scenario-2-copied" style="display: none;">Copied!</div>
+                    </div>
+                    <div class="element-box">
+                        <div class="element-title">SCENARIO ${labels[3]}</div>
+                        <div class="element-content">${scenarios[3].character}, ${scenarios[3].appearance}, ${scenarios[3].pose}, ${scenarios[3].scenario}</div>
+                        <button class="element-copy-btn" data-prompt="${promptIndex}" data-scenario="3" title="Copy Scenario ${labels[3]}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                        </button>
+                        <div class="element-copied" id="prompt-${promptIndex}-scenario-3-copied" style="display: none;">Copied!</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // UI update functions
+        function updateInputValue(value) {
+            inputWord = value;
+            document.getElementById('inputWord').value = value;
+        }
+
+        function renderPrompts() {
+            const container = document.getElementById('promptsContainer');
+            if (generatedPrompts.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+
+            let html = `
+                <div class="section-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/><circle cx="12" cy="13" r="3"/></svg>
+                    <h2>Generated Prompts</h2>
+                    <div class="title-divider"></div>
+                </div>
+                <div>
+            `;
+
+            generatedPrompts.forEach((prompt, index) => {
+                html += `
+                    <div class="prompt-card" data-id="${prompt.id}">
+                        <div class="prompt-content">
+                            <div class="prompt-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            </div>
+                            <div class="prompt-text">
+                                ${prompt.text}
+                            </div>
+                            <button class="copy-btn" data-id="${prompt.id}" title="Copy Full Prompt">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                            </button>
+                        </div>
+                        ${renderElements(index)}
+                        ${prompt.copied ? `
+                            <div class="copied-notice">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                                <span>Copied to clipboard!</span>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            container.innerHTML = html;
+
+            // Add event listeners for copy buttons
+            document.querySelectorAll('.copy-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    const prompt = generatedPrompts.find(p => p.id === id);
+                    if (prompt) {
+                        const textArea = document.createElement('textarea');
+                        textArea.value = prompt.text;
+                        document.body.appendChild(textArea);
+                        textArea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textArea);
+                        
+                        updatePromptCopiedState(id, true);
+                        setTimeout(() => updatePromptCopiedState(id, false), 2000);
+                    }
+                });
+            });
+
+            // Add event listeners for element copy buttons
+            document.querySelectorAll('.element-copy-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const promptIndex = this.getAttribute('data-prompt');
+                    const scenarioIndex = this.getAttribute('data-scenario');
+                    const scenarioData = allScenarios[promptIndex][scenarioIndex];
+                    const scenarioText = `${scenarioData.character}, ${scenarioData.appearance}, ${scenarioData.pose}, ${scenarioData.scenario}`;
+                    
+                    const textArea = document.createElement('textarea');
+                    textArea.value = scenarioText;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    
+                    // Show copied notice
+                    const copiedElement = document.getElementById(`prompt-${promptIndex}-scenario-${scenarioIndex}-copied`);
+                    copiedElement.style.display = 'block';
+                    setTimeout(() => {
+                        copiedElement.style.display = 'none';
+                    }, 2000);
+                });
+            });
+        }
+
+        function updatePromptCopiedState(id, copied) {
+            generatedPrompts = generatedPrompts.map(prompt => 
+                prompt.id === id ? { ...prompt, copied } : prompt
+            );
+            renderPrompts();
+        }
+
+        function handleGenerate() {
+            if (!inputWord.trim()) return;
+            
+            isGenerating = true;
+            updateGenerateButton();
+            
+            // AI engine processing simulation
+            setTimeout(() => {
+                generatedPrompts = [];
+                allScenarios = [];
+                
+                // Generate 4 prompts, each with 4 different scenarios (16 total)
+                for (let i = 0; i < 4; i++) {
+                    const scenarios = generateFourDifferentScenarios();
+                    allScenarios.push(scenarios);
+                    
+                    // Create one combined prompt for display (first scenario)
+                    const combinedPrompt = `${scenarios[0].character}, ${scenarios[0].appearance}, ${scenarios[0].pose}, ${scenarios[0].scenario}, ${scenarios[0].detail}, ${scenarios[0].technical}, ${inputWord} theme`;
+                    
+                    generatedPrompts.push({
+                        id: Date.now() + i,
+                        text: combinedPrompt,
+                        copied: false
+                    });
+                }
+                
+                isGenerating = false;
+                updateGenerateButton();
+                renderPrompts();
+            }, 1500);
+        }
+
+        function updateGenerateButton() {
+            const button = document.getElementById('generateBtn');
+            if (isGenerating) {
+                button.innerHTML = `
+                    <div class="spinner"></div>
+                    <span>Generating...</span>
+                `;
+                button.disabled = true;
+            } else {
+                button.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    <span>Generate Prompt</span>
+                `;
+                button.disabled = !inputWord.trim();
+            }
+        }
+
+        function resetAll() {
+            updateInputValue('');
+            generatedPrompts = [];
+            allScenarios = [];
+            renderPrompts();
+            updateGenerateButton();
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Preload backgrounds
+            preloadBackgrounds();
+            
+            document.getElementById('inputWord').addEventListener('input', function(e) {
+                updateInputValue(e.target.value);
+                updateGenerateButton();
+            });
+
+            document.getElementById('inputWord').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && inputWord.trim() && !isGenerating) {
+                    handleGenerate();
+                }
+            });
+
+            document.getElementById('generateBtn').addEventListener('click', handleGenerate);
+            document.getElementById('resetBtn').addEventListener('click', resetAll);
+
+            // Initial render
+            updateGenerateButton();
+        });
+    </script>
+</body>
+</html>
