@@ -531,9 +531,15 @@
         let generatedPrompts = [];
         let isGenerating = false;
         let allScenarios = []; // Store all 16 scenarios (4 prompts x 4 scenarios each)
+        let backgroundImages = [];
 
-        // Preload background images
+        // Preload background images (20 images)
         function preloadBackgrounds() {
+            // Create array of background image paths (logo1.png to logo20.png)
+            for (let i = 1; i <= 20; i++) {
+                backgroundImages.push(`logo/logo${i}.png`);
+            }
+            
             // Set initial background
             changeBackground();
             
@@ -543,15 +549,17 @@
 
         // Change background to random image
         function changeBackground() {
-            // Generate random number between 1 and 500
-            const randomNum = Math.floor(Math.random() * 500) + 1;
-            const randomImage = `logo/logo${randomNum}.png`;
+            if (backgroundImages.length === 0) return;
+            
+            // Get random background image
+            const randomIndex = Math.floor(Math.random() * backgroundImages.length);
+            const randomImage = backgroundImages[randomIndex];
             
             // Update background
             document.body.style.backgroundImage = `url('${randomImage}')`;
             
             // Update indicator
-            document.getElementById('bgIndicator').textContent = `Background: logo${randomNum}.png`;
+            document.getElementById('bgIndicator').textContent = `Background: ${randomImage.split('/').pop()}`;
         }
 
         // Keyword-based database
